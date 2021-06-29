@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+  font-family: "Encode Sans Expanded", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+.blank-section {
+  background: #010606;
+  height: 200px;
+  @media screen and (max-width: 768px) {
+    height: 100px;
+  }
+  @media screen and (max-width: 586px) {
+    display: none;
+  }
+}

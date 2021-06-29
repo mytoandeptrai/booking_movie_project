@@ -1,0 +1,183 @@
+@import "../../../sass/helpers/mixin";
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.slides {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  height: 700px;
+  @media screen and (max-width: 992px) {
+    height: 600px;
+  }
+  @media screen and (max-width: 768px) {
+    height: 500px;
+  }
+  @media screen and (max-width: 586px) {
+    height: 400px;
+  }
+  @media screen and (max-width: 420px) {
+    height: 350px;
+  }
+  .slide {
+    grid-area: 1 / 2;
+    display: flex;
+    align-items: center;
+  }
+  button {
+    cursor: pointer;
+    position: absolute;
+    top: 30%;
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 5rem;
+    width: 5rem;
+    height: 5rem;
+    transition: opacity 0.3s;
+    opacity: 0.7;
+    z-index: 5;
+    &:hover {
+      opacity: 1;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:first-child {
+      left: 0%;
+    }
+    &:last-child {
+      right: 0%;
+    }
+    @media screen and (max-width: 586px) {
+      top: 20%;
+    }
+  }
+}
+
+.slideContent {
+  width: 25em;
+  height: 70%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transition: transform 0.5s ease-in-out;
+  opacity: 0.7;
+  display: grid;
+  align-content: center;
+  transform-style: preserve-3d;
+  transform: perspective(1000px) translateX(calc(100% * var(--offset)))
+    rotateY(calc(-45deg * var(--dir)));
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.6) 100%
+      ),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
+    z-index: 2;
+  }
+  .slideContentInner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    transform: translateZ(2rem);
+    transition: opacity 0.3s linear;
+    text-shadow: 0 0.1rem 1rem #000;
+    opacity: 0;
+    .slideSubtitle,
+    .slideTitle {
+      text-align: center;
+      font-size: 2rem;
+      color: #ffffff;
+      font-weight: bold;
+      letter-spacing: 0.2ch;
+      text-transform: uppercase;
+      margin: 0;
+      @media screen and (max-width: 992px) {
+        font-size: 1.5rem;
+      }
+      @media screen and (max-width: 786px) {
+        font-size: 1rem;
+      }
+      @media screen and (max-width: 420px) {
+        font-size: 0.7rem;
+      }
+    }
+    .slideLink {
+      @include buttonHomePage(16px, #010606, #01bf71, 10px, 22px);
+      margin-top: 10px;
+      font-weight: bold;
+      @media screen and (max-width: 786px) {
+        font-size: 14px;
+      }
+      @media screen and (max-width: 420px) {
+        font-size: 11px;
+        padding: 5px 15px;
+      }
+    }
+  }
+  @media screen and (max-width: 992px) {
+    width: 20em;
+  }
+  @media screen and (max-width: 768px) {
+    width: 17em;
+  }
+  @media screen and (max-width: 586px) {
+    width: 15em;
+  }
+  @media screen and (max-width: 420px) {
+    width: 13em;
+  }
+}
+
+.slideBackground {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  right: 0%;
+  bottom: 0;
+  background-size: cover;
+  background-position: center center;
+  z-index: -1;
+  opacity: 0.5;
+  transition: opacity 0.3s linear, transform 0.3s ease-in-out;
+  pointer-events: none;
+  transform: translateX(calc(10% * var(--dir)));
+}
+
+.slide[data-active] {
+  z-index: 2;
+  pointer-events: auto;
+  .slideBackground {
+    opacity: 0.2;
+    transform: none;
+  }
+  .slideContentInner {
+    opacity: 1;
+  }
+  .slideContent {
+    --x: calc(var(--px) - 0.3);
+    --y: calc(var(--py) - 0.5);
+    opacity: 1;
+    transform: perspective(1000px);
+    &:hover {
+      transition: none;
+      transform: perspective(1000px) rotateY(calc(var(--x) * 45deg))
+        rotateX(calc(var(--y) * -45deg));
+    }
+  }
+}
