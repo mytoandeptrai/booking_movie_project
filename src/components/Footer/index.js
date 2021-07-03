@@ -61,9 +61,11 @@ const Footer = () => {
             </div>
             <div className="footer-link-items">
               <h1>CHĂM SÓC KHÁCH HÀNG</h1>
-              <span>Hotline: 1900 0091</span>
-              <span>Giờ làm việc: 8:00 - 22:00</span>
-              <span>Email hỗ trợ: hoidap@cybermovies.vn</span>
+              <span style={{ color: "white" }}>Hotline: 1900 0091</span>
+              <span style={{ color: "white" }}>Giờ làm việc: 8:00 - 22:00</span>
+              <span style={{ color: "white" }}>
+                Email hỗ trợ: hoidap@cybermovies.vn
+              </span>
             </div>
           </div>
         </div>

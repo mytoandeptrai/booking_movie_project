@@ -35,7 +35,8 @@ function App() {
           path="/admin/NguoiDungManager"
           Component={CustomerManager}
         />
-        <AdminTemplate path="/admin/KhoaHocManager" Component={MovieManager} />
+
+        <AdminTemplate path="/admin/PhimManager" Component={MovieManager} />
         <Route exact path="*">
           <PageNotFound />
         </Route>

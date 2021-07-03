@@ -153,9 +153,7 @@ const ModalThemPhim = (props) => {
       >
         <Grid container className={classes.grid} spacing={1}>
           <Grid item xs={12} className={classes.title}>
-            <h3 className="text-center">
-              {title ? "Thêm khóa học" : "Sửa khóa học"}
-            </h3>
+            <h3 className="text-center">{title ? "Thêm phim" : "Sửa phim"}</h3>
           </Grid>
           <Grid item xs={6} className={classes.gridItem}>
             <TextField
