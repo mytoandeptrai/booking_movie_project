@@ -3,7 +3,7 @@ import Slide from "./Slide";
 import "./style.scss";
 const MovieSection = ({ danhSachPhim }) => {
   // lấy 15 phim nổi bật
-  const phimNoiBat = danhSachPhim.slice(0, 15);
+  const phimNoiBat = danhSachPhim.slice(15, 30);
   // gán phimNoiBat cho biến slides để thiết kế slider
   const slides = [...phimNoiBat];
 
