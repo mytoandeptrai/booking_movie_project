@@ -201,3 +201,172 @@ export const nguoiDungChinhSuaThongTinAction = (
     }
   };
 };
+
+export const layDanhSachNguoiDungAction = () => {
+  return (dispatch) => {
+    try {
+      dispatch({
+        type: userTypes.FETCH_USERS_START,
+      });
+      axios({
+        url: `${domain}/api/QuanLyNguoiDung/LayDanhSachNguoiDung`,
+        method: "GET",
+      }).then((res) => {
+        const action = {
+          type: userTypes.FETCH_USERS_SUCCESS,
+          payload: res.data,
+        };
+        dispatch(action);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const timKiemNguoiDungAction = (keyWord, setDone) => {
+  console.log(keyWord);
+  return (dispatch) => {
+    if (keyWord == null || keyWord.trim() === "") {
+      axios({
+        url: domain + "/api/QuanLyNguoiDung/LayDanhSachNguoiDung",
+        method: "GET",
+      })
+        .then((res) => {
+          let { data } = res;
+          dispatch({
+            type: userTypes.FETCH_USERS_SUCCESS,
+            payload: data,
+          });
+          setDone(undefined);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } else {
+      axios({
+        url:
+          domain +
+          `/api/QuanLyNguoiDung/TimKiemNguoiDung?MaNhom=GP01&tuKhoa=${keyWord}`,
+        method: "GET",
+      })
+        .then((res) => {
+          let { data } = res;
+          dispatch({
+            type: userTypes.SEARCH_USER_SUCCESS,
+            payload: data,
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+};
+
+export const themNguoiDungAction = (userAdding, setDone) => {
+  return async (dispatch) => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      let { data, status } = await axios({
+        url: `${domain}/api/QuanLyNguoiDung/ThemNguoiDung`,
+        method: "POST",
+        data: {
+          taiKhoan: userAdding.taiKhoan,
+          matKhau: userAdding.matKhau,
+          email: userAdding.email,
+          soDT: userAdding.soDT,
+          maNhom: userAdding.maNhom,
+          hoTen: userAdding.hoTen,
+          maLoaiNguoiDung: userAdding.maLoaiNguoiDung,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (status === 200) {
+        swal("Thành công", "Thêm thành công", "success");
+        setDone(undefined);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+};
+
+export const xoaNguoiDungAction = (taiKhoan, setDone) => {
+  return (dispatch) => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      swal({
+        title: "Bạn chắc chứ?",
+        text: "Người dùng đã xóa không thể khôi phục lại!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios({
+            url:
+              domain + `/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${taiKhoan}`,
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((res) => {
+              let { data, status } = res;
+              if (status === 200) {
+                swal("Thành công", "Xóa thành công", "success");
+                setDone(undefined);
+              }
+            })
+            .catch((err) => {
+              swal("Thất bại", "Không thể xóa người dùng này", "warning");
+            });
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+};
+
+export const suaNguoiDungAction = (userEdited, setDone) => {
+  console.log(userEdited);
+  return async (dispatch) => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      let { data, status } = await axios({
+        url: domain + "/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+        method: "put",
+        data: {
+          taiKhoan: userEdited.taiKhoan,
+          matKhau: userEdited.matKhau,
+          email: userEdited.email,
+          soDT: userEdited.soDT,
+          maLoaiNguoiDung: userEdited.maLoaiNguoiDung,
+          maNhom: userEdited.maNhom,
+          hoTen: userEdited.hoTen,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (status === 200) {
+        swal(
+          "Thành công",
+          "Bạn đã sửa thành công vui lòng đăng nhập lại",
+          "success"
+        );
+        setDone(undefined);
+      }
+    } catch (err) {
+      swal(
+        "Thất bại",
+        "Không thể sửa vui lòng thử lại khi đăng xuất",
+        "warning"
+      );
+    }
+  };
+};

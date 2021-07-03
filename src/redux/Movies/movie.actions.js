@@ -1,5 +1,7 @@
 import axios from "axios";
-import { domain } from "../../Config/settings";
+import moment from "moment";
+import swal from "sweetalert";
+import { domain, USER_LOGIN } from "../../Config/settings";
 import movieTypes from "./movie.types";
 
 export const layDanhSachPhimApiAction = () => {
@@ -78,5 +80,200 @@ export const layChiTietPhongVeAction = (maLichChieu) => {
           payload: err.message,
         });
       });
+  };
+};
+
+export const timKiemPhimAction = (keyWord, setDone) => {
+  return (dispatch) => {
+    try {
+      if (keyWord == null || keyWord.trim() === "") {
+        axios({
+          url: `${domain}/api/QuanLyPhim/LayDanhSachPhim`,
+          method: "GET",
+        })
+          .then((res) => {
+            let { data } = res;
+            dispatch({
+              type: movieTypes.FETCH_MOVIES_SUCCESS,
+              payload: data,
+            });
+            setDone(undefined);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      } else {
+        dispatch({
+          type: movieTypes.SEARCH_MOVIE_SUCCESS,
+          payload: keyWord,
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+};
+
+export const themPhimAction = (thongTinPhim, setDone) => {
+  return async () => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      const ngayKhoiChieu = moment(thongTinPhim.ngayKhoiChieu).format(
+        "DD/MM/YYYY"
+      );
+      const configThongTinPhim = {
+        maPhim: parseInt(thongTinPhim.maPhim),
+        tenPhim: thongTinPhim.tenPhim,
+        biDanh: thongTinPhim.biDanh,
+        trailer: thongTinPhim.trailer,
+        hinhAnh: thongTinPhim.hinhAnh.name,
+        moTa: thongTinPhim.moTa,
+        maNhom: thongTinPhim.maNhom,
+        ngayKhoiChieu: ngayKhoiChieu,
+        danhGia: parseInt(thongTinPhim.danhGia),
+      };
+      console.log(configThongTinPhim);
+      let { data, status } = await axios({
+        url: `${domain}/api/QuanLyPhim/ThemPhim`,
+        method: "POST",
+        data: configThongTinPhim,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => {
+        let { data, status } = res;
+        const configFormData = {
+          maPhim: parseInt(thongTinPhim.maPhim),
+          tenPhim: thongTinPhim.tenPhim,
+          biDanh: thongTinPhim.biDanh,
+          trailer: thongTinPhim.trailer,
+          hinhAnh: thongTinPhim.hinhAnh,
+          moTa: thongTinPhim.moTa,
+          maNhom: thongTinPhim.maNhom,
+          ngayKhoiChieu: ngayKhoiChieu,
+          danhGia: parseInt(thongTinPhim.danhGia),
+        };
+        var form_data = new FormData();
+
+        for (var key in configFormData) {
+          form_data.append(key, configFormData[key]);
+        }
+        axios({
+          url: domain + "/api/QuanLyPhim/ThemPhimUploadHinh",
+          method: "POST",
+          data: form_data,
+        })
+          .then((res) => {
+            swal("Thành công", "Thêm thành công", "success");
+            console.log(res.data);
+            setDone(undefined);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+};
+
+export const suaPhimAction = (thongTinPhim, setDone) => {
+  return async (dispatch) => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      const ngayKhoiChieu = moment(thongTinPhim.ngayKhoiChieu).format(
+        "DD/MM/YYYY"
+      );
+      const configThongTinPhim = {
+        maPhim: parseInt(thongTinPhim.maPhim),
+        tenPhim: thongTinPhim.tenPhim,
+        biDanh: thongTinPhim.biDanh,
+        trailer: thongTinPhim.trailer,
+        hinhAnh: thongTinPhim.hinhAnh.name,
+        moTa: thongTinPhim.moTa,
+        maNhom: thongTinPhim.maNhom,
+        ngayKhoiChieu: ngayKhoiChieu,
+        danhGia: parseInt(thongTinPhim.danhGia),
+      };
+      let { data, status } = await axios({
+        url: `${domain}/api/QuanLyPhim/CapNhatPhim`,
+        method: "POST",
+        data: configThongTinPhim,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => {
+        let { data, status } = res;
+        const configFormData = {
+          maPhim: parseInt(thongTinPhim.maPhim),
+          tenPhim: thongTinPhim.tenPhim,
+          biDanh: thongTinPhim.biDanh,
+          trailer: thongTinPhim.trailer,
+          hinhAnh: thongTinPhim.hinhAnh,
+          moTa: thongTinPhim.moTa,
+          maNhom: thongTinPhim.maNhom,
+          ngayKhoiChieu: ngayKhoiChieu,
+          danhGia: parseInt(thongTinPhim.danhGia),
+        };
+        var form_data = new FormData();
+
+        for (var key in configFormData) {
+          form_data.append(key, configFormData[key]);
+        }
+        axios({
+          url: domain + "/api/QuanLyPhim/UploadHinhAnhPhim",
+          method: "POST",
+          data: form_data,
+        })
+          .then((res) => {
+            swal("Thành công", "Thêm thành công", "success");
+            console.log(res.data);
+            setDone(undefined);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+};
+
+export const xoaPhimAction = (MaPhim, setDone) => {
+  return async (dispatch) => {
+    try {
+      const { accessToken } = JSON.parse(localStorage.getItem(USER_LOGIN));
+      swal({
+        title: "Bạn chắc chứ?",
+        text: "Phim đã xóa thì không thể khôi phục lại!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios({
+            url: domain + `/api/QuanLyPhim/XoaPhim?MaPhim=${MaPhim}`,
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((res) => {
+              let { data, status } = res;
+              if (status === 200) {
+                swal("Thành công", "Xóa thành công", "success");
+                setDone(undefined);
+              }
+            })
+            .catch((err) => {
+              swal("Thất bại", "Không thể xóa phim này", "warning");
+            });
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 };

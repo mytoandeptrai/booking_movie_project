@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Form, Input } from "antd";
+import "antd/dist/antd.css";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +11,8 @@ import {
   layThongTinNguoiDungAction,
   nguoiDungChinhSuaThongTinAction,
 } from "../../../redux/User/user.actions";
+import BookingSteatHistoryItem from "./BookingSeatHistoryItem";
 import "./style.css";
-import "antd/dist/antd.css";
 const useStyles = makeStyles({
   root: {
     maxWidth: "100%",
@@ -70,11 +71,7 @@ const UserContent = ({ active }) => {
     }
   }, [infoUser]);
   const [hideModal, setHideModal] = useState(true);
-  const toggleModal = () => setHideModal(!hideModal);
-  const configModal = {
-    hideModal,
-    toggleModal,
-  };
+
   // pagination
   const [currenPage, setCurrenPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
@@ -218,11 +215,7 @@ const UserContent = ({ active }) => {
                   <tbody>
                     {currentPost.map((item, index) => (
                       <>
-                        <tr
-                          className="parent"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => toggleModal()}
-                        >
+                        <tr className="parent" style={{ cursor: "pointer" }}>
                           <td>{item.maVe}</td>
                           <td>{moment(item.ngayDat).format("YYYY-MM-DD")}</td>
                           <td>{item.tenPhim}</td>
@@ -231,13 +224,18 @@ const UserContent = ({ active }) => {
                         </tr>
 
                         <tr className="child" id={`${item.maVe}`}>
-                          <td colSpan="5"></td>
+                          <td colSpan="5">
+                            {/* <BookingSteatHistoryItem
+                              booking={item.danhSachGhe}
+                            /> */}
+                          </td>
                         </tr>
                       </>
                     ))}
                   </tbody>
                 </table>
               </div>
+              
             </div>
           </div>
         </>

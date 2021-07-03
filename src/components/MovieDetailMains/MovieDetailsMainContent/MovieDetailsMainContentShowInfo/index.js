@@ -5,11 +5,11 @@ import "./style.scss";
 import { NavLink } from "react-router-dom";
 const MovieDetailMainContentShowInfo = ({ movieDetail }) => {
   const [toggleState, setToggleState] = useState(0);
-  
+
   let userLogined = useSelector((state) => state.usersData.currentUser);
   return (
     <>
-      <div className="detail__showtime container" id="showTimeDetail">
+      <div className="detail__showtime container top" id="showTimeDetail">
         <div className="row container">
           <div
             className="col-md-4 col-sm-4 nav flex-column nav-pills"
@@ -34,7 +34,9 @@ const MovieDetailMainContentShowInfo = ({ movieDetail }) => {
                   aria-selected="true"
                 >
                   <img src={heThongRap.logo} width={50} height={50} alt="" />{" "}
-                  <span>{heThongRap.tenHeThongRap}</span>
+                  <span style={{ color: "white" }}>
+                    {heThongRap.tenHeThongRap}
+                  </span>
                 </a>
               );
             })}

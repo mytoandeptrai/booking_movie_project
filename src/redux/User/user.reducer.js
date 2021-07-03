@@ -14,6 +14,9 @@ const INITIAL_STATE = {
   errSignIn: null,
   dataSignUp: null,
   infomationUser: null,
+  listCustomer: null,
+  listCustomerSearch: null,
+  isLoadingCusTomerArray: false,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -90,6 +93,23 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: {},
+      };
+    case userTypes.FETCH_USERS_START:
+      return {
+        ...state,
+        isLoadingCusTomerArray: true,
+      };
+    case userTypes.FETCH_USERS_SUCCESS:
+      return {
+        ...state,
+        listCustomer: action.payload,
+        listCustomerSearch: null,
+        isLoadingCusTomerArray: false,
+      };
+    case userTypes.SEARCH_USER_SUCCESS:
+      return {
+        ...state,
+        listCustomerSearch: action.payload,
       };
     default:
       return state;

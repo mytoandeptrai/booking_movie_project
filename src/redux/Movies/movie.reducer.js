@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   danhSachPhim: [],
   chiTietPhim: {},
   thongTinPhongVe: [],
+  phimTimKiem: null,
   isLoading: true,
   isLoadingMovieDetail: true,
   isLoadingMovieTickets: true,
@@ -21,6 +22,7 @@ const movieReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         danhSachPhim: action.payload,
+        phimTimKiem: null,
         isLoading: false,
       };
     case movieTypes.FETCH_MOVIES_ERROR:
@@ -62,6 +64,15 @@ const movieReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoadingMovieTickets: true,
         error: action.payload,
+      };
+    case movieTypes.SEARCH_MOVIE_SUCCESS:
+      const searchValue = state.danhSachPhim.filter(
+        (el) => el.tenPhim === action.payload
+      );
+      console.log(searchValue);
+      return {
+        ...state,
+        phimTimKiem: searchValue,
       };
     default:
       return state;
