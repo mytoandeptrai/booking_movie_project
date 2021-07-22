@@ -53,6 +53,18 @@ const UserMenu = ({ active, setActive }) => {
                 Đổi mật khẩu
               </h4>
             </li>
+            {currentUser.maLoaiNguoiDung === "QuanTri" ? (
+              <>
+                {" "}
+                <li>
+                  <NavLink className="menu" to="/admin/NguoiDungManager">
+                    Quản lý người dùng
+                  </NavLink>
+                </li>{" "}
+              </>
+            ) : (
+              <> </>
+            )}
             <li>
               <NavLink className="menu" to="/">
                 Quay lại trang chủ

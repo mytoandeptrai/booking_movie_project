@@ -12,6 +12,7 @@ import {
   nguoiDungChinhSuaThongTinAction,
 } from "../../../redux/User/user.actions";
 import BookingSteatHistoryItem from "./BookingSeatHistoryItem";
+import Pagination from "./../../Pagination";
 import "./style.css";
 const useStyles = makeStyles({
   root: {
@@ -235,7 +236,13 @@ const UserContent = ({ active }) => {
                   </tbody>
                 </table>
               </div>
-              
+              {/* <Pagination
+                postsPerPage={postsPerPage}
+                totalPost={post.length}
+                paginate={paginate}
+                nextPage={nextPage}
+                prevPage={prevPage}
+              /> */}
             </div>
           </div>
         </>

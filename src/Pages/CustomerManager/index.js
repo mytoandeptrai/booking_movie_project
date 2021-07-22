@@ -2,13 +2,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Space, Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ModalKhachHang from "../../components/ModalKhachHang";
 import {
   layDanhSachNguoiDungAction,
-  xoaNguoiDungAction
+  xoaNguoiDungAction,
 } from "../../redux/User/user.actions";
 import Loading from "./../../components/Loading/Loading";
-import ModalNguoiDung from "./../../components/ModalNguoiDung";
-import ModalSuaNguoiDung from "./../../components/ModalSuaNguoiDung";
 import SearchNguoiDung from "./../../components/SearchNguoiDung";
 import "./style.css";
 const useStyles = makeStyles((theme) => ({
@@ -26,31 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const CustomerManager = () => {
   const dispatch = useDispatch();
-  //Modal add user
-  const [visible, setVisible] = React.useState(false);
-  //Modal edit
-  const [edit, setedit] = React.useState(false);
-  const [dataEdit, setDataEdit] = useState(null);
-  //Modal course
-  const [more, setMore] = React.useState(false);
-  // function show all modal
-  const showModal = (status, data) => {
-    if (status === 1) {
-      setVisible(true);
-    } else if (status === 0) {
-      setedit(true);
-    } else if (status === 2) {
-      setMore(true);
-      // setDataModal(data);
-    }
-  };
-  // function Close all modal
-  const handleCancel = (e) => {
-    setVisible(false);
-    setedit(false);
-    setMore(false);
-  };
-  //---------------------------Reducer-------------------------------------//
+
   // Get user List
   const danhSachNguoiDung = useSelector(
     (state) => state.usersData.listCustomer
@@ -69,7 +44,41 @@ const CustomerManager = () => {
       setDone(true);
     }, 1800);
   }, [done]);
-  const [dataModal, setDataModal] = useState(null);
+
+  const [open, setOpen] = React.useState(false);
+  //Modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  // action--------------------------------------------------
+  //delete
+  const deleteUser = (taiKhoan) => {
+    dispatch(xoaNguoiDungAction(taiKhoan, setDone));
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //Edit User
+  const [userEdit, setUserEdit] = useState(null);
+  const editUser = (taiKhoan) => {
+    setOpen(true);
+    settitle(false);
+    setUserEdit(taiKhoan);
+    setIsModalVisible(true);
+  };
+  // Add user
+  const addUser = () => {
+    setOpen(true);
+    settitle(true);
+    setIsModalVisible(true);
+  };
+  //cancel modal
+  const handleCancelModal = () => {
+    setIsModalVisible(false);
+    handleClose();
+  };
   //data of table user
   const columns = [
     {
@@ -129,11 +138,8 @@ const CustomerManager = () => {
       render: (text, record) => (
         <Space size="middle">
           <a
-            target="__blank"
-            className="text-warning"
             onClick={() => {
-              showModal(0, text);
-              setDataEdit(text);
+              editUser(text);
             }}
           >
             Sửa
@@ -152,11 +158,19 @@ const CustomerManager = () => {
     data = danhSachNguoiDungSearch;
   }
 
-  //------------------------------UserAction----------------------------------//
-  // Delete User
-  const deleteUser = (taiKhoan) => {
-    dispatch(xoaNguoiDungAction(taiKhoan, setDone));
+  const [more, setMore] = React.useState(false);
+  const [dataModal, setDataModal] = useState(null);
+  const showModal = (taiKhoan) => {
+    setMore(true);
+    setDataModal(taiKhoan);
   };
+
+  const handleCancel = (e) => {
+    setMore(false);
+  };
+
+  const classes = useStyles();
+  const [title, settitle] = useState(true);
 
   return (
     <>
@@ -188,7 +202,7 @@ const CustomerManager = () => {
               </div>
             </div>
           </div>
-          <div className="row mt-2 justify-content-center">
+          <div className="row">
             <div className="col-lg-10">
               <SearchNguoiDung loading={setDone} />
             </div>
@@ -196,41 +210,40 @@ const CustomerManager = () => {
               <button
                 className="btnAddUser"
                 onClick={() => {
-                  showModal(1);
+                  addUser();
                 }}
               >
                 Thêm người dùng
               </button>
+
+              <ModalKhachHang
+                title={title}
+                handleClose={handleClose}
+                setDone={setDone}
+                userEdit={userEdit}
+                handleCancelModal={handleCancelModal}
+                isModalVisible={isModalVisible}
+              />
             </div>
           </div>
-        </div>
-        <div>
-          {!done ? (
-            <Loading />
-          ) : (
-            <Table
-              columns={columns}
-              dataSource={data}
-              pagination={{
-                total: data?.length,
-                pageSize: 7,
-                hideOnSinglePage: true,
-              }}
-            />
-          )}
+
+          <div>
+            {!done ? (
+              <Loading />
+            ) : (
+              <Table
+                columns={columns}
+                dataSource={data}
+                pagination={{
+                  total: data?.length,
+                  pageSize: 7,
+                  hideOnSinglePage: true,
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
-      <ModalNguoiDung
-        visible={visible}
-        handleCancel={handleCancel}
-        setDone={setDone}
-      />
-      <ModalSuaNguoiDung
-        visible={edit}
-        dataEdit={dataEdit}
-        handleCancel={handleCancel}
-        setDone={setDone}
-      />
     </>
   );
 };
